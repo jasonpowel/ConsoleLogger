@@ -1,6 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-
-namespace ConsoleLogger;
+﻿namespace ConsoleLogger;
 
 public class Logger
 {
