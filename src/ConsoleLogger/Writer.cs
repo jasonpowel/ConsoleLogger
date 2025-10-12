@@ -1,6 +1,6 @@
 namespace ConsoleLogger;
 
-public class Logger<T> : Logger
+public sealed class Logger<T> : Logger
 {
 	public Logger() : base()
 	{
