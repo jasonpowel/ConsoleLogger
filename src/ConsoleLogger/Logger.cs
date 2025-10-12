@@ -1,4 +1,6 @@
-﻿namespace ConsoleLogger;
+﻿using System.Runtime.CompilerServices;
+
+namespace ConsoleLogger;
 
 public class Logger
 {
@@ -16,5 +18,38 @@ public class Logger
 
 	public void Log(string message)
 	{
+		LogFormatted(message);
+	}
+
+	private void LogFormatted(string message)
+	{
+		switch (_defaultLogLevel)
+		{
+			case LogLevel.Debug:
+				Console.ForegroundColor = ConsoleColor.Gray;
+				Console.WriteLine(message);
+				Console.ResetColor();
+				break;
+			case LogLevel.Info:
+				Console.ForegroundColor = ConsoleColor.White;
+				Console.WriteLine(message);
+				Console.ResetColor();
+				break;
+			case LogLevel.Warning:
+				Console.ForegroundColor = ConsoleColor.Yellow;
+				Console.WriteLine(message);
+				Console.ResetColor();
+				break;
+			case LogLevel.Error:
+				Console.ForegroundColor = ConsoleColor.Red;
+				Console.WriteLine(message);
+				Console.ResetColor();
+				break;
+			case LogLevel.Critical:
+				Console.ForegroundColor = ConsoleColor.DarkRed;
+				Console.WriteLine(message);
+				Console.ResetColor();
+				break;
+		}
 	}
 }
