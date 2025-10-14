@@ -7,6 +7,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{1E6426BD-AFF
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleLogger", "src\ConsoleLogger\ConsoleLogger.csproj", "{9364AF37-8DDB-410A-8C14-0DB34DB275BD}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{84FF988F-AEC9-4D81-8761-DC62FCFDEF2D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Console", "tests\Test.Console\Test.Console.csproj", "{FC2A9113-DFE8-4FFD-96F0-9DE3F84E0E9F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,8 +24,13 @@ Global
 		{9364AF37-8DDB-410A-8C14-0DB34DB275BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9364AF37-8DDB-410A-8C14-0DB34DB275BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9364AF37-8DDB-410A-8C14-0DB34DB275BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC2A9113-DFE8-4FFD-96F0-9DE3F84E0E9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC2A9113-DFE8-4FFD-96F0-9DE3F84E0E9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC2A9113-DFE8-4FFD-96F0-9DE3F84E0E9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC2A9113-DFE8-4FFD-96F0-9DE3F84E0E9F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{9364AF37-8DDB-410A-8C14-0DB34DB275BD} = {1E6426BD-AFF2-442D-89C8-A08A076E88ED}
+		{FC2A9113-DFE8-4FFD-96F0-9DE3F84E0E9F} = {84FF988F-AEC9-4D81-8761-DC62FCFDEF2D}
 	EndGlobalSection
 EndGlobal
