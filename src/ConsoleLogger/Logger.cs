@@ -1,4 +1,6 @@
-﻿namespace ConsoleLogger;
+﻿using System.Runtime.InteropServices;
+
+namespace ConsoleLogger;
 
 public class Logger
 {
@@ -7,6 +9,7 @@ public class Logger
 	public Logger() : this(LogLevel.Debug)
 	{
 		//allocate new console
+		NativeConsole.AllocConsole();
 	}
 
 	public Logger(LogLevel defaultLogLevel)
