@@ -9,7 +9,7 @@ public class Logger
 	public Logger() : this(LogLevel.Debug)
 	{
 		//allocate new console
-		NativeConsole.AllocConsole();
+		NativeConsole.FreeConsole();
 	}
 
 	public Logger(LogLevel defaultLogLevel)
