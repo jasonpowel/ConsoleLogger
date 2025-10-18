@@ -13,3 +13,5 @@ Console Logger provides a streamlined and feature rich approach to logging to th
 - Critical
 
 #### Logging with Sound
+
+#### PseudoConsoles (TBD)
