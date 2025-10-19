@@ -1,32 +1,42 @@
 ﻿namespace ConsoleLogger;
 
-public class Logger
+public class Logger : IDisposable
 {
 	private readonly LogLevel _defaultLogLevel;
 	private readonly Thread _guiThread;
+	private static readonly ThreadStart _keepConsoleOpenAction = () =>
+		{
+			bool userHasPressedQ = false;
+
+			do
+			{
+				ConsoleKeyInfo consoleKeyInfo = Console.ReadKey();
+
+				userHasPressedQ = consoleKeyInfo.Key == ConsoleKey.Q;
+			}
+			while (!userHasPressedQ);
+		};
+
 
 	public Logger() : this(LogLevel.Debug)
 	{
-		if (NativeConsole.FreeConsole())
-		{
-			if (NativeConsole.AllocConsole())
-			{
-				_guiThread = new Thread(() =>
-				{
-					while (true)
-					{
-						Console.ReadKey();
-					}
-				});
-
-				_guiThread.Start();
-			}
-		}
 	}
 
 	public Logger(LogLevel defaultLogLevel)
 	{
-		_defaultLogLevel = defaultLogLevel;
+		if (NativeConsole.FreeConsole())
+		{
+			NativeConsole.AllocConsole();
+			Console.Title = "Console Logger";
+			_guiThread = new Thread(_keepConsoleOpenAction);
+			_guiThread.Start();
+			_defaultLogLevel = defaultLogLevel;
+		}
+	}
+
+	public void Dispose()
+	{
+		_guiThread.Abort();
 	}
 
 	public void Log(string message)
