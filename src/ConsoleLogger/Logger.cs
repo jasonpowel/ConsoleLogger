@@ -39,14 +39,39 @@ public class Logger : IDisposable
 		_hasBeenDisposed = true;
 	}
 
-	public void Log(string message)
+	public void Log(string message, LogLevel? logLevel = null)
 	{
-		LogFormatted(message);
+		LogFormatted(message, logLevel ?? _defaultLogLevel);
 	}
 
-	private void LogFormatted(string message)
+	public void LogDebug(string message)
 	{
-		switch (_defaultLogLevel)
+		Log(message, LogLevel.Debug);
+	}
+
+	public void LogInformation(string message)
+	{
+		Log(message, LogLevel.Info);
+	}
+
+	public void LogWarning(string message)
+	{
+		Log(message, LogLevel.Warning);
+	}
+
+	public void LogError(string message)
+	{
+		Log(message, LogLevel.Error);
+	}
+
+	public void LogCritical(string message)
+	{
+		Log(message, LogLevel.Critical);
+	}
+
+	private static void LogFormatted(string message, LogLevel logLevel)
+	{
+		switch (logLevel)
 		{
 			case LogLevel.Debug:
 				Console.ForegroundColor = ConsoleColor.Gray;
