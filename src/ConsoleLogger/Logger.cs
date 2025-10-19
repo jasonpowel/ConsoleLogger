@@ -4,17 +4,17 @@ public class Logger : IDisposable
 {
 	private readonly LogLevel _defaultLogLevel;
 	private readonly Thread _guiThread;
+	private static bool _hasBeenDisposed;
 	private static readonly ThreadStart _keepConsoleOpenAction = () =>
 		{
-			bool userHasPressedQ = false;
+			bool hasToCloseConsole = false;
 
 			do
 			{
 				ConsoleKeyInfo consoleKeyInfo = Console.ReadKey();
-
-				userHasPressedQ = consoleKeyInfo.Key == ConsoleKey.Q;
+				hasToCloseConsole = consoleKeyInfo.Key == ConsoleKey.Q;
 			}
-			while (!userHasPressedQ);
+			while (!hasToCloseConsole && !_hasBeenDisposed);
 		};
 
 
@@ -36,7 +36,7 @@ public class Logger : IDisposable
 
 	public void Dispose()
 	{
-		_guiThread.Abort();
+		_hasBeenDisposed = true;
 	}
 
 	public void Log(string message)
