@@ -1,15 +1,27 @@
-﻿using System.Runtime.InteropServices;
-
-namespace ConsoleLogger;
+﻿namespace ConsoleLogger;
 
 public class Logger
 {
 	private readonly LogLevel _defaultLogLevel;
+	private readonly Thread _guiThread;
 
 	public Logger() : this(LogLevel.Debug)
 	{
-		//allocate new console
-		NativeConsole.FreeConsole();
+		if (NativeConsole.FreeConsole())
+		{
+			if (NativeConsole.AllocConsole())
+			{
+				_guiThread = new Thread(() =>
+				{
+					while (true)
+					{
+						Console.ReadKey();
+					}
+				});
+
+				_guiThread.Start();
+			}
+		}
 	}
 
 	public Logger(LogLevel defaultLogLevel)
