@@ -24,11 +24,12 @@ public class Logger : IDisposable
 
 	public Logger(LogLevel defaultLogLevel)
 	{
+		_guiThread = new Thread(_keepConsoleOpenAction);
+
 		if (NativeConsole.FreeConsole())
 		{
 			NativeConsole.AllocConsole();
 			Console.Title = "Console Logger";
-			_guiThread = new Thread(_keepConsoleOpenAction);
 			_guiThread.Start();
 			_defaultLogLevel = defaultLogLevel;
 		}
