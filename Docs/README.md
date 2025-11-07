@@ -1,10 +1,15 @@
 ## Console Logger
-Console Logger provides a streamlined and feature rich approach to logging to the console.
+Console Logger provides a streamlined and feature rich approach to logging to the console. It can serve as a utility for other libraries to log to the console.
 
 ## Features
 ### Disposable Consoles
+```cs
+using var logger = new ConsoleLogger();
+log.LogInformation("Successfully processed request");
+```
 
-### Conventional Logging With Icing
+### Conventional Logging With Extra Features
+
 #### Various Log Levels
 - Debug
 - Information
