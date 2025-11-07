@@ -2,6 +2,7 @@
 
 public class Logger : IDisposable
 {
+	private const string DefaultConsoleTitle = "Console Logger";
 	private readonly LogLevel _defaultLogLevel;
 	private readonly Thread _guiThread;
 	private static bool _hasBeenDisposed;
@@ -18,18 +19,18 @@ public class Logger : IDisposable
 		};
 
 
-	public Logger() : this(LogLevel.Debug)
+	public Logger(string? consoleTitle = null) : this(LogLevel.Debug, consoleTitle ?? DefaultConsoleTitle)
 	{
 	}
 
-	public Logger(LogLevel defaultLogLevel)
+	public Logger(LogLevel defaultLogLevel, string consoleTitle)
 	{
 		_guiThread = new Thread(_keepConsoleOpenAction);
 
 		if (NativeConsole.FreeConsole())
 		{
 			NativeConsole.AllocConsole();
-			Console.Title = "Console Logger";
+			Console.Title = consoleTitle;
 			_guiThread.Start();
 			_defaultLogLevel = defaultLogLevel;
 		}
