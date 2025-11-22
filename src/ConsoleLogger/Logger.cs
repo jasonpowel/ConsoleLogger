@@ -6,7 +6,23 @@ public class Logger : IDisposable
 	private readonly LogLevel _defaultLogLevel;
 	private readonly Thread _guiThread;
 	private static bool _hasBeenDisposed;
-	private static readonly ThreadStart _keepConsoleOpenAction = () =>
+	private readonly ConsoleKey _keyToQuiteConsole;
+
+	private readonly ThreadStart _keepConsoleOpenAction;
+	private readonly string _consoleTitle;
+
+	public Logger(
+		string? consoleTitle = null,
+		ConsoleKey keyToQuitConsole = ConsoleKey.Q) : this(
+			LogLevel.Debug,
+			consoleTitle ?? DefaultConsoleTitle,
+			keyToQuitConsole)
+	{
+	}
+
+	public Logger(LogLevel defaultLogLevel, string consoleTitle, ConsoleKey keyToQuitConsole)
+	{
+		_keepConsoleOpenAction = () =>
 		{
 			bool hasToCloseConsole = false;
 
@@ -19,18 +35,14 @@ public class Logger : IDisposable
 		};
 
 
-	public Logger(string? consoleTitle = null) : this(LogLevel.Debug, consoleTitle ?? DefaultConsoleTitle)
-	{
-	}
-
-	public Logger(LogLevel defaultLogLevel, string consoleTitle)
-	{
 		_guiThread = new Thread(_keepConsoleOpenAction);
 
 		if (NativeConsole.FreeConsole())
 		{
 			NativeConsole.AllocConsole();
+			_keyToQuiteConsole = keyToQuitConsole;
 			Console.Title = consoleTitle;
+			_consoleTitle = consoleTitle;
 			_guiThread.Start();
 			_defaultLogLevel = defaultLogLevel;
 		}
@@ -39,6 +51,7 @@ public class Logger : IDisposable
 	public void Dispose()
 	{
 		_hasBeenDisposed = true;
+		Console.WriteLine("Press any key to close window..");
 	}
 
 	public void Log(string message, LogLevel? logLevel = null)

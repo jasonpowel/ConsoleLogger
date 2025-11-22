@@ -4,7 +4,7 @@ Console Logger provides a streamlined and feature rich approach to logging to th
 ## Features
 ### Disposable Consoles
 ```cs
-using var logger = new ConsoleLogger();
+using var logger = new Logger();
 log.LogInformation("Successfully processed request");
 ```
 
@@ -18,6 +18,11 @@ log.LogInformation("Successfully processed request");
 - Critical
 
 #### Console Headers
+When initializing a logger you can specify the title.
+
+```cs
+var logger = new Logger(consoleTitle: "MyConsole");
+```
 
 #### Logging with Sound
 
