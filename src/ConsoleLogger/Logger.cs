@@ -9,7 +9,9 @@ public class Logger : IDisposable
 	private readonly ConsoleKey _keyToQuiteConsole;
 
 	private readonly ThreadStart _keepConsoleOpenAction;
+	private readonly string _previousConsoleTitle;
 	private readonly string _consoleTitle;
+	private const int MaxConsoleTitleLength = 24500;
 
 	public Logger(
 		string? consoleTitle = null,
@@ -37,13 +39,28 @@ public class Logger : IDisposable
 
 		_guiThread = new Thread(_keepConsoleOpenAction);
 
-		if (NativeConsole.FreeConsole())
+		if (NativeConsole.AllocConsole())
 		{
-			NativeConsole.AllocConsole();
+			ArgumentOutOfRangeException.ThrowIfGreaterThan(
+				consoleTitle.Length,
+				MaxConsoleTitleLength);
+
 			_keyToQuiteConsole = keyToQuitConsole;
-			Console.Title = consoleTitle;
+			_previousConsoleTitle = Console.Title;
 			_consoleTitle = consoleTitle;
+			Console.Title = consoleTitle;
 			_guiThread.Start();
+			_defaultLogLevel = defaultLogLevel;
+		}
+		else
+		{
+			ArgumentOutOfRangeException.ThrowIfGreaterThan(
+				consoleTitle.Length,
+				MaxConsoleTitleLength);
+
+			_previousConsoleTitle = Console.Title;
+			_consoleTitle = consoleTitle;
+			Console.Title = consoleTitle;
 			_defaultLogLevel = defaultLogLevel;
 		}
 	}
@@ -52,6 +69,7 @@ public class Logger : IDisposable
 	{
 		_hasBeenDisposed = true;
 		Console.WriteLine("Press any key to close window..");
+		Console.Title = _previousConsoleTitle;
 	}
 
 	public void Log(string message, LogLevel? logLevel = null)
