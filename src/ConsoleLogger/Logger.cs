@@ -29,7 +29,7 @@ public class Logger : IDisposable
 			do
 			{
 				ConsoleKeyInfo consoleKeyInfo = Console.ReadKey();
-				hasToCloseConsole = consoleKeyInfo.Key == ConsoleKey.Q;
+				hasToCloseConsole = consoleKeyInfo.Key == _keyToQuiteConsole;
 			}
 			while (!hasToCloseConsole && !_hasBeenDisposed);
 		};
