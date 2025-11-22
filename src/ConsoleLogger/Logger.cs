@@ -3,6 +3,8 @@
 public class Logger : IDisposable
 {
 	private const string DefaultConsoleTitle = "Console Logger";
+	private const string ConsoleLoggerDetachedMessage = "\nDetaching Console Logger....\n";
+	private const string PressAnyKeyToCloseWindowMessage = "Press any key to close window..";
 	private readonly LogLevel _defaultLogLevel;
 	private readonly Thread _guiThread;
 	private static bool _hasBeenDisposed;
@@ -11,6 +13,7 @@ public class Logger : IDisposable
 	private readonly ThreadStart _keepConsoleOpenAction;
 	private readonly string _previousConsoleTitle;
 	private readonly string _consoleTitle;
+	private readonly bool _hasAttachedNewConsole;
 	private const int MaxConsoleTitleLength = 24500;
 
 	public Logger(
@@ -39,7 +42,9 @@ public class Logger : IDisposable
 
 		_guiThread = new Thread(_keepConsoleOpenAction);
 
-		if (NativeConsole.AllocConsole())
+		_hasAttachedNewConsole = NativeConsole.AllocConsole();
+
+		if (_hasAttachedNewConsole)
 		{
 			ArgumentOutOfRangeException.ThrowIfGreaterThan(
 				consoleTitle.Length,
@@ -68,7 +73,8 @@ public class Logger : IDisposable
 	public void Dispose()
 	{
 		_hasBeenDisposed = true;
-		Console.WriteLine("Press any key to close window..");
+		string finalMessage = _hasAttachedNewConsole ? PressAnyKeyToCloseWindowMessage : ConsoleLoggerDetachedMessage;
+		Console.WriteLine(finalMessage);
 		Console.Title = _previousConsoleTitle;
 	}
 
