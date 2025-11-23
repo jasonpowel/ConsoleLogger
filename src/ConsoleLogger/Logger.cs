@@ -20,12 +20,12 @@ public class Logger : IDisposable
 		string? consoleTitle = null,
 		ConsoleKey keyToQuitConsole = ConsoleKey.Q) : this(
 			LogLevel.Debug,
-			consoleTitle ?? DefaultConsoleTitle,
+			consoleTitle,
 			keyToQuitConsole)
 	{
 	}
 
-	public Logger(LogLevel defaultLogLevel, string consoleTitle, ConsoleKey keyToQuitConsole)
+	public Logger(LogLevel defaultLogLevel, string? consoleTitle, ConsoleKey keyToQuitConsole)
 	{
 		_keepConsoleOpenAction = () =>
 		{
@@ -46,9 +46,18 @@ public class Logger : IDisposable
 
 		if (_hasAttachedNewConsole)
 		{
-			ArgumentOutOfRangeException.ThrowIfGreaterThan(
-				consoleTitle.Length,
-				MaxConsoleTitleLength);
+
+			if (consoleTitle is null)
+			{
+				consoleTitle = DefaultConsoleTitle;
+			}
+			else
+			{
+				ArgumentOutOfRangeException.ThrowIfGreaterThan(
+					consoleTitle.Length,
+					MaxConsoleTitleLength);
+			}
+
 
 			_keyToQuiteConsole = keyToQuitConsole;
 			_previousConsoleTitle = Console.Title;
@@ -59,14 +68,18 @@ public class Logger : IDisposable
 		}
 		else
 		{
-			ArgumentOutOfRangeException.ThrowIfGreaterThan(
-				consoleTitle.Length,
-				MaxConsoleTitleLength);
+			if (consoleTitle is not null)
+			{
+				ArgumentOutOfRangeException.ThrowIfGreaterThan(
+					consoleTitle.Length,
+					MaxConsoleTitleLength);
 
-			_previousConsoleTitle = Console.Title;
-			_consoleTitle = consoleTitle;
-			Console.Title = consoleTitle;
-			_defaultLogLevel = defaultLogLevel;
+				_previousConsoleTitle = Console.Title;
+				_consoleTitle = consoleTitle;
+				Console.Title = consoleTitle;
+				_defaultLogLevel = defaultLogLevel;
+			}
+
 		}
 	}
 
@@ -75,7 +88,11 @@ public class Logger : IDisposable
 		_hasBeenDisposed = true;
 		string finalMessage = _hasAttachedNewConsole ? PressAnyKeyToCloseWindowMessage : ConsoleLoggerDetachedMessage;
 		Console.WriteLine(finalMessage);
-		Console.Title = _previousConsoleTitle;
+
+		if (_consoleTitle is not null)
+		{
+			Console.Title = _previousConsoleTitle;
+		}
 	}
 
 	public void Log(string message, LogLevel? logLevel = null)
