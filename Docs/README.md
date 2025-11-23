@@ -5,7 +5,7 @@ Console Logger provides a streamlined and feature rich approach to logging to th
 ### Disposable Consoles
 ```cs
 using var logger = new Logger();
-log.LogInformation("Successfully processed request");
+logger.LogInformation("Successfully processed request");
 ```
 **Note:** If the process already had a console window attached, disposing the logger wouldn't close it. But if the process didn't already have a console window attached and a new one was created when the logger was initialized, disposing the logger would close the console window.
 
@@ -23,8 +23,13 @@ log.LogInformation("Successfully processed request");
 When initializing a logger you can specify the title.
 
 ```cs
-using var logger = new Logger(consoleTitle: "MyConsole");
+using var logger = new Logger(consoleTitle: "Logs");
+logger.LogInformation("Logger started...");
 ```
+
+The above snippet will result in the result in the image below.
+
+![Console Title](./Images/Console_Title.png)
 
 **Note:** If the process already had a console window attached, the older title is stored and set back when the logger instance is disposed.
 

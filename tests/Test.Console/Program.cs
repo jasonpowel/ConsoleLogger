@@ -6,7 +6,9 @@ static class Program
 {
 	public static void Main()
 	{
-		var logger = new Logger();
-		logger.Log("Hello");
+		using var logger = new Logger(consoleTitle: "Logs");
+		logger.Log("Logger started...");
+
+		Thread.Sleep(1_000);
 	}
 }
