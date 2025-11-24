@@ -1,4 +1,6 @@
-﻿namespace ConsoleLogger;
+﻿using ConsoleLogger.Extensions;
+
+namespace ConsoleLogger;
 
 public class Logger : IDisposable
 {
@@ -9,6 +11,7 @@ public class Logger : IDisposable
 	private readonly Thread _guiThread;
 	private static bool _hasBeenDisposed;
 	private readonly ConsoleKey _keyToQuiteConsole;
+	private string _lastMessageToConsole;
 
 	private readonly ThreadStart _keepConsoleOpenAction;
 	private readonly string _previousConsoleTitle;
@@ -97,38 +100,55 @@ public class Logger : IDisposable
 
 	public Logger Log(string message, LogLevel? logLevel = null)
 	{
+		_lastMessageToConsole = message;
 		LogFormatted(message, logLevel ?? _defaultLogLevel);
 		return this;
 	}
 
 	public Logger LogDebug(string message)
 	{
+		_lastMessageToConsole = message;
 		Log(message, LogLevel.Debug);
 		return this;
 	}
 
 	public Logger LogInformation(string message)
 	{
+		_lastMessageToConsole = message;
 		Log(message, LogLevel.Info);
 		return this;
 	}
 
 	public Logger LogWarning(string message)
 	{
+		_lastMessageToConsole = message;
 		Log(message, LogLevel.Warning);
 		return this;
 	}
 
 	public Logger LogError(string message)
 	{
+		_lastMessageToConsole = message;
 		Log(message, LogLevel.Error);
 		return this;
 	}
 
 	public Logger LogCritical(string message)
 	{
+		_lastMessageToConsole = message;
 		Log(message, LogLevel.Critical);
 		return this;
+	}
+
+	public void WithSound(Sound sound = Sound.Notify)
+	{
+		if (_lastMessageToConsole is null)
+		{
+			throw new InvalidOperationException(
+				"Cannot call this method if any of the methods to log have not been called.");
+		}
+
+		Console.PlaySound();
 	}
 
 	private static void LogFormatted(string message, LogLevel logLevel)
