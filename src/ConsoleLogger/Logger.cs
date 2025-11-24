@@ -95,34 +95,40 @@ public class Logger : IDisposable
 		}
 	}
 
-	public void Log(string message, LogLevel? logLevel = null)
+	public Logger Log(string message, LogLevel? logLevel = null)
 	{
 		LogFormatted(message, logLevel ?? _defaultLogLevel);
+		return this;
 	}
 
-	public void LogDebug(string message)
+	public Logger LogDebug(string message)
 	{
 		Log(message, LogLevel.Debug);
+		return this;
 	}
 
-	public void LogInformation(string message)
+	public Logger LogInformation(string message)
 	{
 		Log(message, LogLevel.Info);
+		return this;
 	}
 
-	public void LogWarning(string message)
+	public Logger LogWarning(string message)
 	{
 		Log(message, LogLevel.Warning);
+		return this;
 	}
 
-	public void LogError(string message)
+	public Logger LogError(string message)
 	{
 		Log(message, LogLevel.Error);
+		return this;
 	}
 
-	public void LogCritical(string message)
+	public Logger LogCritical(string message)
 	{
 		Log(message, LogLevel.Critical);
+		return this;
 	}
 
 	private static void LogFormatted(string message, LogLevel logLevel)
