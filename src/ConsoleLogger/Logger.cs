@@ -20,7 +20,7 @@ public class Logger : IDisposable
 	private const int MaxConsoleTitleLength = 24500;
 
 	internal record struct LogEntry(string Message, LogLevel LogLevel);
-	internal record struct SoundOption(int Frequency, int Duration);
+	public sealed record SoundOption(int Frequency, int Duration);
 
 	protected Logger(
 		string? consoleTitle = null,
