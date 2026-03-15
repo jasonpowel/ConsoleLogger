@@ -1,5 +1,5 @@
 ## Console Logger
-Console Logger provides a streamlined and feature rich approach to logging to the console. It can serve as a utility for other libraries to log to the console and now that scripting is going to be seen more in the language; this is a must have in your toolbox.
+Console Logger provides a streamlined and feature rich approach to logging to the console. It can serve as a utility for other libraries to log to the console and now that scripting is going to be seen more in the C# language; this is a must have in your toolbox.
 
 ## Features
 ### Disposable Consoles
@@ -34,7 +34,7 @@ The above snippet will result in the result in the image below.
 **Note:** If the process already had a console window attached, the older title is stored and set back when the logger instance is disposed.
 
 #### Logging with Sound
-The logger allows you to log with sound.
+The logger allows you to log with sound. The frequency and duration of the sound is determined by the passed sound option or the log level in the call chain.
 
 ```cs
 
@@ -43,5 +43,7 @@ using var logger = new Logger(consoleTitle: "Logs");
 logger.LogInformation("Logger started...")
 		.WithSound(Sounds.Info);
 ```
+
+**Note**: For `Critical` log level the duration is set to the max integer, however you can change this using the `WithSound()` method to modify the `SoundOption`.
 
 #### PseudoConsoles (TBD)
