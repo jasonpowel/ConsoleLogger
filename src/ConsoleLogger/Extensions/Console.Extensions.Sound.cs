@@ -1,3 +1,4 @@
+using static ConsoleLogger.Logger;
 
 namespace ConsoleLogger.Extensions;
 
@@ -5,9 +6,9 @@ public static class ConsoleExtensions
 {
     extension(Console)
     {
-        public static void PlaySound()
+        public static void PlaySound(SoundOption soundOption)
         {
-            Console.Beep();
+            Console.Beep(soundOption.Frequency, soundOption.Duration);
         }
     }
 }
