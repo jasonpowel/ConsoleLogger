@@ -144,7 +144,7 @@ public class Logger : IDisposable
 		return this;
 	}
 
-	public async Task WithSound(Sound? sound = null)
+	public void WithSound(Sound? sound = null)
 	{
 		if (_lastLogEntry is null)
 		{
