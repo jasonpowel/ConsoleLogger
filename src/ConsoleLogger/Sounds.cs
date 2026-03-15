@@ -2,7 +2,7 @@
 
 public enum Sound
 {
-    Prompt = 400,
+    Prompt = 600,
     Notify = 800,
     Warn = 1200,
     Alarm = 2000,
@@ -11,7 +11,7 @@ public enum Sound
 
 public enum SoundDuration
 {
-    Prompt = 100,
+    Prompt = 150,
     Notify = 200,
     Warn = 600,
     Alarm = 1000,

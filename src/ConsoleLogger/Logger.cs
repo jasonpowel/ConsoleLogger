@@ -20,7 +20,7 @@ public class Logger : IDisposable
 	private const int MaxConsoleTitleLength = 24500;
 
 	internal record struct LogEntry(string Message, LogLevel LogLevel);
-	public sealed record SoundOption(int Frequency, int Duration);
+	internal record struct SoundOption(int Frequency, int Duration);
 
 	protected Logger(
 		string? consoleTitle = null,
@@ -52,7 +52,6 @@ public class Logger : IDisposable
 
 		if (_hasAttachedNewConsole)
 		{
-
 			if (consoleTitle is null)
 			{
 				consoleTitle = DefaultConsoleTitle;
@@ -104,42 +103,52 @@ public class Logger : IDisposable
 	public Logger Log(string message, LogLevel? logLevel = null)
 	{
 		logLevel ??= _defaultLogLevel;
-		_lastLogEntry = new LogEntry(message, logLevel.Value);
+		CacheLogEntry(message, logLevel.Value);
 		LogFormatted(message, logLevel.Value);
 		return this;
 	}
 
 	public Logger LogDebug(string message)
 	{
-		_lastLogEntry = new LogEntry(message, LogLevel.Debug);
+		LogLevel debugLogLevel = LogLevel.Debug;
+		_lastLogEntry = new LogEntry(message, debugLogLevel);
+		CacheLogEntry(message, debugLogLevel);
 		Log(message, LogLevel.Debug);
 		return this;
 	}
 
 	public Logger LogInformation(string message)
 	{
-		_lastLogEntry = new LogEntry(message, LogLevel.Info);
+		LogLevel infoLogLevel = LogLevel.Info;
+		_lastLogEntry = new LogEntry(message, infoLogLevel);
+		CacheLogEntry(message, infoLogLevel);
 		Log(message, LogLevel.Info);
 		return this;
 	}
 
 	public Logger LogWarning(string message)
 	{
-		_lastLogEntry = new LogEntry(message, LogLevel.Warning);
+		LogLevel warningLogLevel = LogLevel.Warning;
+		_lastLogEntry = new LogEntry(message, warningLogLevel);
+		CacheLogEntry(message, warningLogLevel);
 		Log(message, LogLevel.Warning);
 		return this;
 	}
 
 	public Logger LogError(string message)
 	{
+		LogLevel errorLogLevel = LogLevel.Error;
 		_lastLogEntry = new LogEntry(message, LogLevel.Error);
+		CacheLogEntry(message, errorLogLevel);
 		Log(message, LogLevel.Error);
 		return this;
 	}
 
 	public Logger LogCritical(string message)
 	{
+		LogLevel criticalLogLevel = LogLevel.Critical;
 		_lastLogEntry = new LogEntry(message, LogLevel.Critical);
+		CacheLogEntry(message, criticalLogLevel);
 		Log(message, LogLevel.Critical);
 		return this;
 	}
@@ -160,12 +169,12 @@ public class Logger : IDisposable
 	{
 		if (_lastLogEntry is null)
 		{
-			throw new InvalidOperationException("Cannot create sound option without having logged any message");
+			throw new InvalidOperationException("Cannot create sound option without having logged any message.");
 		}
 
 		return _lastLogEntry.Value.LogLevel switch
 		{
-			LogLevel.Debug => CreateSoundOption(Sound.Notify),
+			LogLevel.Debug => CreateSoundOption(Sound.Prompt),
 			LogLevel.Info => CreateSoundOption(Sound.Notify),
 			LogLevel.Warning => CreateSoundOption(Sound.Warn),
 			LogLevel.Error => CreateSoundOption(Sound.Alarm),
@@ -173,6 +182,12 @@ public class Logger : IDisposable
 			_ => CreateSoundOption(Sound.Notify)
 		};
 	}
+
+	private void CacheLogEntry(string message, LogLevel logLevel)
+	{
+		_lastLogEntry = new LogEntry(message, logLevel);
+	}
+
 
 	private static SoundOption CreateSoundOption(Sound soundOption)
 	{
