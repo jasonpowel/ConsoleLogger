@@ -100,94 +100,44 @@ public class Logger : IDisposable
 		}
 	}
 
-	public Logger Log(string message, LogLevel? logLevel = null)
+	public ConsoleLogBuilder Log(string message, LogLevel? logLevel = null)
 	{
 		logLevel ??= _defaultLogLevel;
-		CacheLogEntry(message, logLevel.Value);
+		LogEntry logEntry = new LogEntry(message, logLevel.Value);
+		CacheLogEntry(logEntry);
 		LogFormatted(message, logLevel.Value);
-		return this;
+		return new ConsoleLogBuilder(logEntry);
 	}
 
-	public Logger LogDebug(string message)
+	public ConsoleLogBuilder LogDebug(string message)
 	{
-		LogLevel debugLogLevel = LogLevel.Debug;
-		_lastLogEntry = new LogEntry(message, debugLogLevel);
-		CacheLogEntry(message, debugLogLevel);
-		Log(message, LogLevel.Debug);
-		return this;
+		return Log(message, LogLevel.Debug);
 	}
 
-	public Logger LogInformation(string message)
+	public ConsoleLogBuilder LogInformation(string message)
 	{
-		LogLevel infoLogLevel = LogLevel.Info;
-		_lastLogEntry = new LogEntry(message, infoLogLevel);
-		CacheLogEntry(message, infoLogLevel);
-		Log(message, LogLevel.Info);
-		return this;
+		return Log(message, LogLevel.Info);
 	}
 
-	public Logger LogWarning(string message)
+	public ConsoleLogBuilder LogWarning(string message)
 	{
-		LogLevel warningLogLevel = LogLevel.Warning;
-		_lastLogEntry = new LogEntry(message, warningLogLevel);
-		CacheLogEntry(message, warningLogLevel);
-		Log(message, LogLevel.Warning);
-		return this;
+		return Log(message, LogLevel.Warning);
 	}
 
-	public Logger LogError(string message)
+	public ConsoleLogBuilder LogError(string message)
 	{
-		LogLevel errorLogLevel = LogLevel.Error;
-		_lastLogEntry = new LogEntry(message, LogLevel.Error);
-		CacheLogEntry(message, errorLogLevel);
-		Log(message, LogLevel.Error);
-		return this;
+		return Log(message, LogLevel.Error);
 	}
 
-	public Logger LogCritical(string message)
+	public ConsoleLogBuilder LogCritical(string message)
 	{
-		LogLevel criticalLogLevel = LogLevel.Critical;
-		_lastLogEntry = new LogEntry(message, LogLevel.Critical);
-		CacheLogEntry(message, criticalLogLevel);
-		Log(message, LogLevel.Critical);
-		return this;
+		return Log(message, LogLevel.Critical);
 	}
 
-	public void WithSound(Sound? sound = null)
+	private void CacheLogEntry(LogEntry logEntry)
 	{
-		if (_lastLogEntry is null)
-		{
-			throw new InvalidOperationException(
-				"Cannot call this method if any of the methods to log an actual message have not been called.");
-		}
-
-		SoundOption soundOption = sound is null ? GetSoundOptionsTypeFromLastLogLevel() : CreateSoundOption(sound.Value);
-		Console.PlaySound(soundOption);
+		_lastLogEntry = logEntry;
 	}
-
-	private SoundOption GetSoundOptionsTypeFromLastLogLevel()
-	{
-		if (_lastLogEntry is null)
-		{
-			throw new InvalidOperationException("Cannot create sound option without having logged any message.");
-		}
-
-		return _lastLogEntry.Value.LogLevel switch
-		{
-			LogLevel.Debug => CreateSoundOption(Sound.Prompt),
-			LogLevel.Info => CreateSoundOption(Sound.Notify),
-			LogLevel.Warning => CreateSoundOption(Sound.Warn),
-			LogLevel.Error => CreateSoundOption(Sound.Alarm),
-			LogLevel.Critical => CreateSoundOption(Sound.Critical),
-			_ => CreateSoundOption(Sound.Notify)
-		};
-	}
-
-	private void CacheLogEntry(string message, LogLevel logLevel)
-	{
-		_lastLogEntry = new LogEntry(message, logLevel);
-	}
-
 
 	private static SoundOption CreateSoundOption(Sound soundOption)
 	{
@@ -233,6 +183,35 @@ public class Logger : IDisposable
 				Console.WriteLine(message);
 				Console.ResetColor();
 				break;
+		}
+	}
+
+	public sealed class ConsoleLogBuilder
+	{
+		private readonly LogEntry _logEntry;
+
+		internal ConsoleLogBuilder(LogEntry logEntry)
+		{
+			_logEntry = logEntry;
+		}
+
+		public void WithSound(Sound? sound = null)
+		{
+			SoundOption soundOption = sound is null ? GetSoundOptionsTypeFromLastLogLevel() : CreateSoundOption(sound.Value);
+			Console.PlaySound(soundOption);
+		}
+
+		private SoundOption GetSoundOptionsTypeFromLastLogLevel()
+		{
+			return _logEntry.LogLevel switch
+			{
+				LogLevel.Debug => CreateSoundOption(Sound.Prompt),
+				LogLevel.Info => CreateSoundOption(Sound.Notify),
+				LogLevel.Warning => CreateSoundOption(Sound.Warn),
+				LogLevel.Error => CreateSoundOption(Sound.Alarm),
+				LogLevel.Critical => CreateSoundOption(Sound.Critical),
+				_ => CreateSoundOption(Sound.Notify)
+			};
 		}
 	}
 }
