@@ -98,38 +98,13 @@ public class Logger : IDisposable
 		}
 	}
 
-	public ConsoleLogBuilder Log(string message, LogLevel? logLevel = null)
+	protected ConsoleLogBuilder Log(string message, LogLevel? logLevel = null)
 	{
 		logLevel ??= _defaultLogLevel;
 		LogEntry logEntry = new LogEntry(message, logLevel.Value);
 		CacheLogEntry(logEntry);
 		LogFormatted(message, logLevel.Value);
 		return new ConsoleLogBuilder(logEntry);
-	}
-
-	public ConsoleLogBuilder LogDebug(string message)
-	{
-		return Log(message, LogLevel.Debug);
-	}
-
-	public ConsoleLogBuilder LogInformation(string message)
-	{
-		return Log(message, LogLevel.Info);
-	}
-
-	public ConsoleLogBuilder LogWarning(string message)
-	{
-		return Log(message, LogLevel.Warning);
-	}
-
-	public ConsoleLogBuilder LogError(string message)
-	{
-		return Log(message, LogLevel.Error);
-	}
-
-	public ConsoleLogBuilder LogCritical(string message)
-	{
-		return Log(message, LogLevel.Critical);
 	}
 
 	private void CacheLogEntry(LogEntry logEntry)
