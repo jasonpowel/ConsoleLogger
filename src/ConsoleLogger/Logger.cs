@@ -1,6 +1,4 @@
-﻿using ConsoleLogger.Extensions;
-
-namespace ConsoleLogger;
+﻿namespace ConsoleLogger;
 
 public class Logger : IDisposable
 {
@@ -20,18 +18,18 @@ public class Logger : IDisposable
 	private const int MaxConsoleTitleLength = 24500;
 
 	internal record struct LogEntry(string Message, LogLevel LogLevel);
-	public sealed record SoundOption(int Frequency, int Duration);
+	internal sealed record SoundOption(int Frequency, int Duration);
 
-	protected Logger(
-		string? consoleTitle = null,
-		ConsoleKey keyToQuitConsole = ConsoleKey.Q) : this(
-			LogLevel.Debug,
-			consoleTitle,
-			keyToQuitConsole)
+	protected internal Logger(
+	  string? consoleTitle = null,
+	  ConsoleKey keyToQuitConsole = ConsoleKey.Q) : this(
+		  LogLevel.Debug,
+		  consoleTitle,
+		  keyToQuitConsole)
 	{
 	}
 
-	protected Logger(LogLevel defaultLogLevel, string? consoleTitle, ConsoleKey keyToQuitConsole)
+	protected internal Logger(LogLevel defaultLogLevel, string? consoleTitle, ConsoleKey keyToQuitConsole)
 	{
 		_keepConsoleOpenAction = () =>
 		{
@@ -198,7 +196,12 @@ public class Logger : IDisposable
 		public void WithSound(Sound? sound = null)
 		{
 			SoundOption soundOption = sound is null ? GetSoundOptionsTypeFromLastLogLevel() : CreateSoundOption(sound.Value);
-			Console.PlaySound(soundOption);
+			PlaySound(soundOption);
+		}
+
+		private static void PlaySound(SoundOption soundOption)
+		{
+			Console.Beep(soundOption.Frequency, soundOption.Duration);
 		}
 
 		private SoundOption GetSoundOptionsTypeFromLastLogLevel()
