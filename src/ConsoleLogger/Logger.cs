@@ -89,7 +89,17 @@ public class Logger : IDisposable
 	public void Dispose()
 	{
 		_hasBeenDisposed = true;
-		string finalMessage = _hasAttachedNewConsole ? PressAnyKeyToCloseWindowMessage : ConsoleLoggerDetachedMessage;
+		string finalMessage;
+
+		if (_hasAttachedNewConsole)
+		{
+			finalMessage = PressAnyKeyToCloseWindowMessage;
+		}
+		else
+		{
+			finalMessage = ConsoleLoggerDetachedMessage;
+		}
+
 		Console.WriteLine(finalMessage);
 
 		if (_consoleTitle is not null)
@@ -170,7 +180,17 @@ public class Logger : IDisposable
 
 		public void WithSound(Sound? sound = null)
 		{
-			SoundOption soundOption = sound is null ? GetSoundOptionsTypeFromLastLogLevel() : CreateSoundOption(sound.Value);
+			SoundOption soundOption;
+
+			if (sound is null)
+			{
+				soundOption = GetSoundOptionsTypeFromLastLogLevel();
+			}
+			else
+			{
+				soundOption = CreateSoundOption(sound.Value);
+			}
+
 			PlaySound(soundOption);
 		}
 
